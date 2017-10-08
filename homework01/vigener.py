@@ -17,10 +17,12 @@ def encrypt_vigenere(plaintext, keyword):
         else:
             shift -= 97
         index = ord(i)
-        if index < 91:
+        if 64 < index < 91:
             ciphertext += chr((index - 65 + shift) % 26 + 65)
-        else:
+        elif 96 < index < 123:
             ciphertext += chr((index - 97 + shift) % 26 + 97)
+        else:
+            ciphertext += chr(index)
     return ciphertext
 
 def decrypt_vigenere(ciphertext, keyword):
@@ -42,8 +44,10 @@ def decrypt_vigenere(ciphertext, keyword):
         else:
             shift -= 97
         index = ord(i)
-        if index < 91:
+        if 64 < index < 91:
             plaintext += chr(90 - (90 + shift - index) % 26)
-        else:
+        elif 96 < index < 123:
             plaintext += chr(122 - (122 + shift - index) % 26)
+        else:
+            plaintext += chr(index)
     return plaintext
