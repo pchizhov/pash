@@ -15,7 +15,7 @@ def encrypt_caesar(plaintext, shift):
         elif 96 < index < 123:
             ciphertext += chr((index - 97 + shift) % 26 + 97)
         else:
-            ciphertext += chr(index)
+            ciphertext += letter
     return ciphertext
 
 
@@ -36,5 +36,5 @@ def decrypt_caesar(ciphertext, shift):
         elif 96 < index < 123:
             plaintext += chr(122 - (122 + shift - index) % 26)
         else:
-            plaintext += chr(index)
+            plaintext += letter
     return plaintext
