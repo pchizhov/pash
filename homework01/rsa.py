@@ -33,22 +33,20 @@ def multiplicative_inverse(e, phi):
     >>> multiplicative_inverse(7, 40)
     23
     """
-    phi0 = phi
-    divs = []
-    while phi % e != 0:
-        c = phi % e
-        divs.append(phi // e)
-        phi = e
-        e = c
-    divs.reverse()
-    x = 0
-    y = 1
-    for i in range(1, len(divs)):
-        z = x
-        x = y
-        y = z - y * divs[i]
-    d = y % phi0
+    table = []
+    while True:
+        table.append([phi, e, phi % e, phi // e])
+        phi, e = e, table[-1][2]
+        if table[-1][2] == 0:
+            break
+    table[-1].extend([0, 1])
+    for i in range(len(table) - 2, -1, -1):
+        x = table[i + 1][-1]
+        y = table[i + 1][-2] - table[i + 1][-1] * table[i][3]
+        table[i].extend([x, y])
+    d = table[0][-1] % table[0][0]
     return d
+
 
 def generate_keypair(p, q):
     if not (is_prime(p) and is_prime(q)):
