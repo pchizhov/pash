@@ -1,3 +1,6 @@
+import random
+
+
 def read_sudoku(filename):
     """ Прочитать Судоку из указанного файла """
     digits = [c for c in open(filename).read() if c in '123456789.']
@@ -141,28 +144,25 @@ def solve(grid):
     >>> solve(grid)
     [['5', '3', '4', '6', '7', '8', '9', '1', '2'], ['6', '7', '2', '1', '9', '5', '3', '4', '8'], ['1', '9', '8', '3', '4', '2', '5', '6', '7'], ['8', '5', '9', '7', '6', '1', '4', '2', '3'], ['4', '2', '6', '8', '5', '3', '7', '9', '1'], ['7', '1', '3', '9', '2', '4', '8', '5', '6'], ['9', '6', '1', '5', '3', '7', '2', '8', '4'], ['2', '8', '7', '4', '1', '9', '6', '3', '5'], ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
     """
-    grid_copy = grid
-    position = find_empty_positions(grid_copy)
+    position = find_empty_positions(grid)
     if position == 0:
-        return grid_copy
-    else:
-        possible = find_possible_values(grid_copy, position)
-        if possible == []:
-            return 'wrongway'
-        else:
-            for i in possible:
-                grid_copy[position[0]][position[1]] = i
-                if solve(grid_copy) == 'wrongway':
-                    continue
-                else:
-                    solve(grid_copy)
+        return grid
+    possible = find_possible_values(grid, position)
+    if not len(possible):
+        pass
+    for i in possible:
+        grid[position[0]][position[1]] = i
+        solution = solve(grid)
+        if solution:
+            return grid
+    grid[position[0]][position[1]] = '.'
 
 
 def check_solution(solution):
     """ Если решение solution верно, то вернуть True, в противном случае False """
     count = 0
-    for x in solution:
-        for y in solution[x]:
+    for x in range(9):
+        for y in range(9):
             i = solution[x][y]
             solution[x][y] = 0
             if not((i in get_row(solution, (x, y))) and (i in get_col(solution, (x, y))) and (i in get_block(solution, (x, y)))):
@@ -195,8 +195,21 @@ def generate_sudoku(N):
     >>> check_solution(solution)
     True
     """
-    # PUT YOUR CODE HERE
-    pass
+    grid = []
+    for i in range(9):
+        grid.append([])
+    for i in range(9):
+        for j in range(9):
+            grid[i].append('.')
+    grid = solve(grid)
+    row = random.randint(0, 8)
+    col = random.randint(0, 8)
+    for i in range(81-N):
+        while grid[row][col] == '.':
+            row = random.randint(0, 8)
+            col = random.randint(0, 8)
+        grid[row][col] = '.'
+    return grid
 
 
 if __name__ == '__main__':
