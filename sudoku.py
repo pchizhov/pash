@@ -153,7 +153,7 @@ def solve(grid):
     for i in possible:
         grid[position[0]][position[1]] = i
         solution = solve(grid)
-        if solution:
+        if solution != None:
             return grid
     grid[position[0]][position[1]] = '.'
 
