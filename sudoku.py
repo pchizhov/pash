@@ -28,18 +28,8 @@ def group(values, n):
     >>> group([1,2,3,4,5,6,7,8,9], 3)
     [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     """
-    matrix = []
-    for i in range(n):
-        matrix.append([])
-    count = 0
-    line = 0
-    for i in range(len(values)):
-        if count < n:
-            count += 1
-        elif count == n:
-            line += 1
-            count = 1
-        matrix[line].append(values[i])
+    lines = len(values) // n
+    matrix = [values[i*n: i*n + n] for i in range(lines)]
     return matrix
 
 
@@ -68,9 +58,7 @@ def get_col(values, pos):
     ['3', '6', '9']
     """
     number = pos[1]
-    col = []
-    for i in range(len(values)):
-        col.append(values[i][number])
+    col = [values[i][number] for i in range(len(values))]
     return col
 
 
@@ -85,12 +73,9 @@ def get_block(values, pos):
     >>> get_block(grid, (8, 8))
     ['2', '8', '.', '.', '.', '5', '.', '7', '9']
     """
-    block = []
     blockrow = (pos[0] // 3) * 3
     blockcol = (pos[1] // 3) * 3
-    for i in range(3):
-        block.extend(values[blockrow][blockcol: blockcol + 3])
-        blockrow += 1
+    block = [values[blockrow + i][blockcol + j] for i in range(3) for j in range(3)]
     return block
 
 
@@ -124,11 +109,8 @@ def find_possible_values(grid, pos):
     >>> set(values) == {'2', '5', '9'}
     True
     """
-    possiblevalues = []
-    for i in range(1, 10):
-        if not(str(i) in get_row(grid, pos) or str(i) in get_col(grid, pos) or str(i) in get_block(grid, pos)):
-            possiblevalues.append(str(i))
-    return possiblevalues
+    possible_values = [str(i) for i in range(1, 10) if not(str(i) in get_row(grid, pos) or str(i) in get_col(grid, pos) or str(i) in get_block(grid, pos))]
+    return possible_values
 
 
 def solve(grid):
@@ -153,7 +135,7 @@ def solve(grid):
     for i in possible:
         grid[position[0]][position[1]] = i
         solution = solve(grid)
-        if solution != None:
+        if solution:
             return grid
     grid[position[0]][position[1]] = '.'
 
@@ -195,12 +177,7 @@ def generate_sudoku(N):
     >>> check_solution(solution)
     True
     """
-    grid = []
-    for i in range(9):
-        grid.append([])
-    for i in range(9):
-        for j in range(9):
-            grid[i].append('.')
+    grid = [['.' for i in range(9)] for j in range(9)]
     grid = solve(grid)
     row = random.randint(0, 8)
     col = random.randint(0, 8)
@@ -210,11 +187,3 @@ def generate_sudoku(N):
             col = random.randint(0, 8)
         grid[row][col] = '.'
     return grid
-
-
-if __name__ == '__main__':
-    for fname in ['puzzle1.txt', 'puzzle2.txt', 'puzzle3.txt']:
-        grid = read_sudoku(fname)
-        display(grid)
-        solution = solve(grid)
-        display(solution)
