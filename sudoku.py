@@ -147,7 +147,7 @@ def check_solution(solution):
     count = 0
     for x in range(9):
         for y in range(9):
-            digits = {str(i) for i in range(1, 10)}
+            digits = set('123456789')
             row_digits = digits - set(get_row(solution, (x, y)))
             col_digits = digits - set(get_col(solution, (x, y)))
             block_digits = digits - set(get_block(solution, (x, y)))
