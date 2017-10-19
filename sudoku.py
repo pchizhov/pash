@@ -109,7 +109,9 @@ def find_possible_values(grid, pos):
     >>> set(values) == {'2', '5', '9'}
     True
     """
-    possible_values = [str(i) for i in range(1, 10) if not(str(i) in get_row(grid, pos) or str(i) in get_col(grid, pos) or str(i) in get_block(grid, pos))]
+    digits = set(get_row(grid, pos))
+    digits.update(set(get_col(grid, pos)), set(get_block(grid, pos)))
+    possible_values = [str(i) for i in range(1, 10) if not(str(i) in digits)]
     return possible_values
 
 
@@ -147,7 +149,9 @@ def check_solution(solution):
         for y in range(9):
             i = solution[x][y]
             solution[x][y] = 0
-            if not((i in get_row(solution, (x, y))) and (i in get_col(solution, (x, y))) and (i in get_block(solution, (x, y)))):
+            digits = set(get_row(solution, (x, y)))
+            digits.update(set(get_col(solution, (x, y))), set(get_block(solution, (x, y))))
+            if not(i in digits):
                 count += 1
     if count == 81:
         return True
@@ -187,3 +191,11 @@ def generate_sudoku(N):
             col = random.randint(0, 8)
         grid[row][col] = '.'
     return grid
+
+
+if __name__ == '__main__':
+    for fname in ['puzzle1.txt', 'puzzle2.txt', 'puzzle3.txt']:
+        grid = read_sudoku(fname)
+        display(grid)
+        solution = solve(grid)
+        display(solution)
