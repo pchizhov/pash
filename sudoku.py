@@ -109,9 +109,10 @@ def find_possible_values(grid, pos):
     >>> set(values) == {'2', '5', '9'}
     True
     """
-    digits = set(get_row(grid, pos))
-    digits.update(set(get_col(grid, pos)), set(get_block(grid, pos)))
-    possible_values = [str(i) for i in range(1, 10) if not(str(i) in digits)]
+    digits = {str(i) for i in range(1, 10)}
+    digits.add('.')
+    digits = digits - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos)) - set('.')
+    possible_values = [i for i in digits]
     return possible_values
 
 
@@ -147,11 +148,13 @@ def check_solution(solution):
     count = 0
     for x in range(9):
         for y in range(9):
-            i = solution[x][y]
-            solution[x][y] = 0
-            digits = set(get_row(solution, (x, y)))
-            digits.update(set(get_col(solution, (x, y))), set(get_block(solution, (x, y))))
-            if not(i in digits):
+            digits = {str(i) for i in range(1, 10)}
+            row_digits = digits - set(get_row(solution, (x, y)))
+            col_digits = digits - set(get_col(solution, (x, y)))
+            block_digits = digits - set(get_block(solution, (x, y)))
+            remainder = set()
+            remainder.update(row_digits, col_digits, block_digits)
+            if not len(remainder):
                 count += 1
     if count == 81:
         return True
