@@ -109,9 +109,8 @@ def find_possible_values(grid, pos):
     >>> set(values) == {'2', '5', '9'}
     True
     """
-    digits = {str(i) for i in range(1, 10)}
-    digits.add('.')
-    digits = digits - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos)) - set('.')
+    digits = set('123456789.')
+    digits = digits - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))
     possible_values = [i for i in digits]
     return possible_values
 
