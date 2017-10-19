@@ -109,10 +109,10 @@ def find_possible_values(grid, pos):
     >>> set(values) == {'2', '5', '9'}
     True
     """
-    digits = set('123456789.')
-    digits = digits - set(get_row(grid, pos)) - set(get_col(grid, pos)) - set(get_block(grid, pos))
-    possible_values = [i for i in digits]
-    return possible_values
+    return set('123456789') -\
+           set(get_row(grid, pos)) -\
+           set(get_col(grid, pos)) -\
+           set(get_block(grid, pos))
 
 
 def solve(grid):
@@ -147,10 +147,9 @@ def check_solution(solution):
     count = 0
     for x in range(9):
         for y in range(9):
-            digits = set('123456789')
-            row_digits = digits - set(get_row(solution, (x, y)))
-            col_digits = digits - set(get_col(solution, (x, y)))
-            block_digits = digits - set(get_block(solution, (x, y)))
+            row_digits = set('123456789') - set(get_row(solution, (x, y)))
+            col_digits = set('123456789') - set(get_col(solution, (x, y)))
+            block_digits = set('123456789') - set(get_block(solution, (x, y)))
             remainder = set()
             remainder.update(row_digits, col_digits, block_digits)
             if not len(remainder):
