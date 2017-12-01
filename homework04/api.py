@@ -51,12 +51,12 @@ def get_friends(user_id=config['VK_USER_ID'], fields=''):
         'domain': config['DOMAIN'],
         'access_token': config['VK_ACCESS_TOKEN'],
         'user_id': user_id,
-        'fields': fields
+        'fields': fields,
+        'v': '5.53'
     }
 
-    query = "{domain}/friends.get?access_token={access_token}&user_id={user_id}&fields={fields}&v=5.53".format(
-        **query_params)
-    response = requests.get(query)
+    url = "{}/friends.get".format(config["DOMAIN"])
+    response = get(url, params=query_params)
     return response.json()
 
 
@@ -134,6 +134,7 @@ def get_network(user_id=config['VK_USER_ID'], as_edgelist=True):
     edges = []
     matrix = np.zeros((len(users_ids), len(users_ids)))
     for friend_1 in range(len(users_ids)):
+        time.sleep(1)
         response = get_friends(users_ids[friend_1])
         if response.get('error'):
             continue
