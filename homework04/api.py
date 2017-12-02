@@ -161,17 +161,18 @@ def plot_graph(user_id=config['VK_USER_ID']):
               edges=edges, directed=False)
 
     N = len(vertices)
-    visual_style = {}
-    visual_style["vertex_size"] = 8
-    visual_style["bbox"] = (1000, 1000)
-    visual_style["margin"] = 100
-    visual_style["vertex_label_dist"] = 1.6
-    visual_style["edge_color"] = "gray"
-    visual_style["autocurve"] = True
-    visual_style["layout"] = g.layout_fruchterman_reingold(
-        maxiter=100000,
-        area=N ** 2,
-        repulserad=N ** 2)
+    visual_style = {
+        "vertex_size": 8,
+        "bbox": (1000, 1000),
+        "margin": 100,
+        "vertex_label_dist": 1.6,
+        "edge_color": "gray",
+        "autocurve": True,
+        "layout": g.layout_fruchterman_reingold(
+            maxiter=100000,
+            area=N ** 2,
+            repulserad=N ** 2)
+    }
 
     clusters = g.community_multilevel()
     pal = igraph.drawing.colors.ClusterColoringPalette(len(clusters))
