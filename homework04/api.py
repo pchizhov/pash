@@ -60,7 +60,7 @@ def get_friends(user_id=config['VK_USER_ID'], fields=''):
     return response.json()
 
 
-def age_predict(user_id):
+def age_predict(user_id=config['VK_USER_ID']):
     """ Наивный прогноз возраста по возрасту друзей
     Возраст считается как медиана среди возраста всех друзей пользователя
     :param user_id: идентификатор пользователя
@@ -163,7 +163,7 @@ def plot_graph(user_id=config['VK_USER_ID']):
     N = len(vertices)
     visual_style = {
         "vertex_size": 8,
-        "bbox": (1000, 1000),
+        "bbox": (2000, 2000),
         "margin": 100,
         "vertex_label_dist": 1.6,
         "edge_color": "gray",
