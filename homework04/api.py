@@ -162,7 +162,7 @@ def plot_graph(user_id=config['VK_USER_ID']):
 
     N = len(vertices)
     visual_style = {
-        "vertex_size": 8,
+        "vertex_size": 20,
         "bbox": (2000, 2000),
         "margin": 100,
         "vertex_label_dist": 1.6,
