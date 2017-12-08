@@ -134,7 +134,7 @@ def get_network(user_id=config['VK_USER_ID'], as_edgelist=True):
     edges = []
     matrix = np.zeros((len(users_ids), len(users_ids)))
     for friend_1 in range(len(users_ids)):
-        time.sleep(1)
+        time.sleep(0.33333334)
         response = get_friends(users_ids[friend_1])
         if response.get('error'):
             continue
