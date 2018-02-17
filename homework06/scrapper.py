@@ -48,7 +48,6 @@ def extract_next_page(parser):
     url_start = link.find('newest')
     url_end = link.find('" rel=')
     next_page_code = link[url_start:url_end]
-    print(next_page_code)
     return next_page_code
 
 
