@@ -4,7 +4,7 @@ from bottle import (
 
 from scrapper import get_news
 from db import News, session, fill
-from bayes_ham_spam import NaiveBayesClassifier
+from bayes import NaiveBayesClassifier
 
 
 @route("/news")
@@ -22,13 +22,16 @@ def add_label():
     row = s.query(News).filter(News.id == row_id).all()
     row[0].label = label
     s.commit()
-    redirect("/news")
+    if request.query.classify == 'True':
+        redirect('/classify')
+    else:
+        redirect('/news')
 
 
 @route("/update")
 def update_news():
     s = session()
-    fresh = get_news(n_pages=16)
+    fresh = get_news()
     db = s.query(News).all()
     new = True
     for fresh_news in fresh:
@@ -44,8 +47,20 @@ def update_news():
 
 @route("/classify")
 def classify_news():
-    # PUT YOUR CODE HERE
-    pass
+    s = session()
+    classifier = NaiveBayesClassifier()
+    train = s.query(News).filter(News.label != None).all()
+    x_train, y_train = [], []
+    for row in train:
+        x_train.append(row.title)
+        y_train.append(row.label)
+    classifier.fit(x_train, y_train)
+
+    to_do = s.query(News).filter(News.label == None).all()
+    x_to_do = [row.title for row in to_do]
+    labels = classifier.predict(x_to_do)
+    classified_news = [to_do[i] for i in range(len(to_do)) if labels[i] == 'good']
+    return template('news_recommendations', rows=classified_news)
 
 
 if __name__ == "__main__":
