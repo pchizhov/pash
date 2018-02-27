@@ -19,8 +19,8 @@ def add_label():
     s = session()
     label = request.query.label
     row_id = request.query.id
-    row = s.query(News).filter(News.id == row_id).all()
-    row[0].label = label
+    row = s.query(News).filter(News.id == row_id).one()
+    row.label = label
     s.commit()
     if request.query.classify == 'True':
         redirect('/classify')
@@ -31,17 +31,13 @@ def add_label():
 @route("/update")
 def update_news():
     s = session()
-    fresh = get_news()
-    db = s.query(News).all()
-    new = True
-    for fresh_news in fresh:
-        for db_news in db:
-            if (fresh_news['title'], fresh_news['author']) ==\
-               (db_news.title, db_news.author):
-                new = False
-                break
-        if new:
-            fill(fresh_news)
+    recent_news = get_news()
+    authors = [news['author'] for news in recent_news]
+    titles = [row.title for row in s.query(News).filter(News.author in authors).all()]
+    existing_news = s.query(News).filter(News.title in titles).all()
+    for news in recent_news:
+        if not existing_news or news not in existing_news:
+            fill(news)
     redirect("/news")
 
 
