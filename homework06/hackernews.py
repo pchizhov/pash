@@ -45,17 +45,15 @@ def update_news():
 def classify_news():
     s = session()
     classifier = NaiveBayesClassifier()
-    train = s.query(News).filter(News.label != None).all()
-    x_train, y_train = [], []
-    for row in train:
-        x_train.append(row.title)
-        y_train.append(row.label)
+    marked_news = s.query(News).filter(News.label != None).all()
+    x_train = [row.title for row in marked_news]
+    y_train = [row.label for row in marked_news]
     classifier.fit(x_train, y_train)
 
-    to_do = s.query(News).filter(News.label == None).all()
-    x_to_do = [row.title for row in to_do]
-    labels = classifier.predict(x_to_do)
-    classified_news = [to_do[i] for i in range(len(to_do)) if labels[i] == 'good']
+    blank_rows = s.query(News).filter(News.label == None).all()
+    x = [row.title for row in blank_rows]
+    labels = classifier.predict(x)
+    classified_news = [blank_rows[i] for i in range(len(blank_rows)) if labels[i] == 'good']
     return template('news_recommendations', rows=classified_news)
 
 
