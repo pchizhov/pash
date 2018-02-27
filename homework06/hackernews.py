@@ -33,8 +33,8 @@ def update_news():
     s = session()
     recent_news = get_news()
     authors = [news['author'] for news in recent_news]
-    titles = [row.title for row in s.query(News).filter(News.author in authors).all()]
-    existing_news = s.query(News).filter(News.title in titles).all()
+    titles = s.query(News.titles).filter(News.author.in_(authors_list)).subquery()
+    existing_news = s.query(News).filter(News.title.in_(titles)).all()
     for news in recent_news:
         if not existing_news or news not in existing_news:
             fill(news)
