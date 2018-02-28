@@ -9,14 +9,12 @@ from bayes import NaiveBayesClassifier
 
 @route("/news")
 def news_list():
-    s = session()
     rows = s.query(News).filter(News.label == None).all()
     return template('news_template', rows=rows)
 
 
 @route("/add_label/")
 def add_label():
-    s = session()
     label = request.query.label
     row_id = request.query.id
     row = s.query(News).filter(News.id == row_id).one()
@@ -30,7 +28,6 @@ def add_label():
 
 @route("/update")
 def update_news():
-    s = session()
     recent_news = get_news()
     authors = [news['author'] for news in recent_news]
     titles = s.query(News.title).filter(News.author.in_(authors)).subquery()
@@ -43,12 +40,11 @@ def update_news():
 
 @route("/classify")
 def classify_news():
-    s = session()
-    classifier = NaiveBayesClassifier()
-    marked_news = s.query(News).filter(News.label != None).all()
-    x_train = [row.title for row in marked_news]
-    y_train = [row.label for row in marked_news]
-    classifier.fit(x_train, y_train)
+    recently_marked_news = s.query(News).filter(News.title not in x_train and News.label != None).all()
+    x_extra_train = [row.title for row in recently_marked_news]
+    y_extra_train = [row.label for row in recently_marked_news]
+    classifier.fit(x_extra_train, y_extra_train)
+    print(len(classifier.table[0]))
 
     blank_rows = s.query(News).filter(News.label == None).all()
     x = [row.title for row in blank_rows]
@@ -58,4 +54,11 @@ def classify_news():
 
 
 if __name__ == "__main__":
+    s = session()
+    classifier = NaiveBayesClassifier()
+    marked_news = s.query(News).filter(News.label != None).all()
+    x_train = [row.title for row in marked_news]
+    y_train = [row.label for row in marked_news]
+    classifier.fit(x_train, y_train)
+    print(len(classifier.table[0]))
     run(host="localhost", port=8080)
