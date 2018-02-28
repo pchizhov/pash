@@ -44,7 +44,6 @@ def classify_news():
     x_extra_train = [row.title for row in recently_marked_news]
     y_extra_train = [row.label for row in recently_marked_news]
     classifier.fit(x_extra_train, y_extra_train)
-    print(len(classifier.table[0]))
 
     blank_rows = s.query(News).filter(News.label == None).all()
     x = [row.title for row in blank_rows]
@@ -60,5 +59,4 @@ if __name__ == "__main__":
     x_train = [row.title for row in marked_news]
     y_train = [row.label for row in marked_news]
     classifier.fit(x_train, y_train)
-    print(len(classifier.table[0]))
     run(host="localhost", port=8080)
