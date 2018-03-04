@@ -10,11 +10,11 @@ from collections import Counter
 
 
 config = {
-    'VK_ACCESS_TOKEN': '2ebdef1a5b4a23bc79a9921b75e5f9adf4101cf0ca8da1a04499f3a31a18ac0801f48aa9bf0bec9e5f6f3',
-    'PLOTLY_USERNAME': 'chizh',
-    'PLOTLY_API_KEY': 'LiuXrJDUm5IIdjodElLe',
-    'VK_USER_ID': 52972873,
-    'DOMAIN': 'https://api.vk.com/method'
+    'VK_ACCESS_TOKEN': '',
+    'PLOTLY_USERNAME': '',
+    'PLOTLY_API_KEY': '',
+    'VK_USER_ID': '',
+    'DOMAIN': ''
 }
 
 plotly.tools.set_credentials_file(username=config['PLOTLY_USERNAME'], api_key=config['PLOTLY_API_KEY'])
